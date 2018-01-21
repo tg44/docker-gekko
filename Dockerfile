@@ -2,7 +2,7 @@ FROM phusion/baseimage:0.9.19
 
 #Prerequisites
 RUN apt-get update && apt-get upgrade -y; \
-    apt-get install -y apt-utils ca-certificates git npm
+    apt-get install -y apt-utils ca-certificates git npm nano
 
 #Setup Node - Taken from node docker image v6
 # gpg keys listed at https://github.com/nodejs/node
@@ -22,6 +22,7 @@ RUN set -ex \
 
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.3.0
+ENV CONF_FILE config.js
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
@@ -50,6 +51,7 @@ RUN mkdir -p /etc/service/gekko; ln -s /service_start_gekko.sh /etc/service/gekk
 #Enable plugins
 RUN npm install redis@0.10.0 talib@1.0.2 pg
 
-VOLUME /usr/src/gekko/history
+#for manual git clone
+VOLUME /usr/src/gekko 
 
 CMD ["/sbin/my_init"]
